@@ -47,6 +47,13 @@
       width: 122px;
     }
   </style>
+  <script src="https://cdn.trackjs.com/agent/v3/latest/t.js"></script>
+  <script>
+    window.TrackJS && TrackJS.install({ 
+      token: "eda6d21abf854c9b902b9b5cecce96ca"
+      // for more configuration options, see https://docs.trackjs.com
+    });
+  </script>
 </head>
 
 <body>
@@ -90,18 +97,135 @@
   <script>
     let form = document.querySelector('form');
     form.addEventListener('submit', e => {
-      e.preventDefault();
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      try {
+        e.preventDefault();
+        var output = document.querySelector('output');
+        var firstNum = document.querySelector('#first-num').value;
+        var secondNum = document.querySelector('#second-num').value;
+        var operator = document.querySelector('#operator').value;
+        if (isNaN(firstNum)) {
+          throw new InputError("First number is not a valid number");
+        }
+        if (isNaN(secondNum)) {
+          throw new InputError("Second number is not a valid number");
+        }
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      } catch (error) {
+        if (error instanceof InputError) {
+          console.error(error.message);
+        } else {
+          console.log("An error happened");
+          console.error(error.message);
+        }
+      } finally {
+        console.log("You Rule!");
+      }
     });
+
+    class InputError extends Error {
+      constructor(message) {
+        super(message);
+        this.name = "InputError";
+      }
+    }
+    window.onerror = function () {
+        console.log("Window detected an error");
+    }
 
     let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
 
     // Start your code here
     // You may move this JS to another file if you wish
+
+    // Console.log function
+    errorBtns[0].addEventListener('click', (event) => {
+      console.log("Logging text to console");
+    });
+
+    // Console.error function
+    errorBtns[1].addEventListener('click', (event) => {
+      console.error("Logging an error");
+    });
+
+    // Console.count function
+    errorBtns[2].addEventListener('click', (event) => {
+      console.count("Log count");
+    });
+
+    // Console.warn function
+    errorBtns[3].addEventListener('click', (event) => {
+      console.warn("Logging a warning");
+    });
+
+    // Console.assert function
+    errorBtns[4].addEventListener('click', (event) => {
+      let number = 2;
+      let errorMessage = 'Number not supposed to be 2'
+      console.assert(1 == number, {number, errorMessage});
+    });
+
+    // Console.clear function
+    errorBtns[5].addEventListener('click', (event) => {
+      console.clear();
+    });
+
+    // Console.dir function
+    errorBtns[6].addEventListener('click', (event) => {
+      console.dir(errorBtns[6]);
+    });
+
+    // Console.dirxml function
+    errorBtns[7].addEventListener('click', (event) => {
+      console.dirxml(errorBtns[7]);
+    });
+
+    const groupLabel = "This is a group";
+
+    // Console.group function
+    errorBtns[8].addEventListener('click', (event) => {
+      console.group(groupLabel);
+    });
+
+    // Console.groupEnd function
+    errorBtns[9].addEventListener('click', (event) => {
+      console.groupEnd(groupLabel);
+    });
+
+    // Console.table function
+    errorBtns[10].addEventListener('click', (event) => {
+      console.table([1, 2, 3]);
+    });
+
+    const timeLabel = "Timer";
+
+    // Console.time function
+    errorBtns[11].addEventListener('click', (event) => {
+      console.time(timeLabel);
+    });
+
+    // Console.timeEnd function
+    errorBtns[12].addEventListener('click', (event) => {
+      console.timeEnd(timeLabel);
+    });
+
+    // Console.trace function
+    errorBtns[13].addEventListener('click', (event) => {
+      const functionOne = () => { 
+        functionTwo(); 
+      };
+      const functionTwo = () => { 
+        functionThree(); 
+      };
+      const functionThree = () => { 
+        console.trace(); 
+      };
+      functionOne();
+    });
+
+    // Cause Gloabl error function
+    errorBtns[14].addEventListener('click', (event) => {
+      console.log(wontWork);
+    });
   </script>
 </body>
 
